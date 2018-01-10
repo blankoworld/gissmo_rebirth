@@ -1,0 +1,73 @@
+from django.contrib.postgres.fields import DateTimeRangeField
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+
+
+class Type(models.Model):
+    name = models.CharField(max_length=254, )
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+
+class Model(models.Model):
+    SENSOR = 0
+    PREAMPLIFIER = 1
+    DATALOGGER = 2
+    EQUIPMENT = 3
+    HYBRID = 4
+
+    name = models.CharField(max_length=254)
+    _type = models.ForeignKey(
+        'gissmo.Type', related_name='models', on_delete=models.DO_NOTHING)
+    chain_type = models.IntegerField(
+        choices=((SENSOR, 'Sensor'), (PREAMPLIFIER, 'Preamplifier'),
+                 (DATALOGGER,
+                  'Datalogger'), (EQUIPMENT, 'Equipment'), (HYBRID, 'Hybrid')))
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+
+class Equipment(models.Model):
+    name = models.CharField(max_length=254, verbose_name='Serial number')
+    model = models.ForeignKey(
+        'gissmo.Model', related_name='equipments', on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+
+class State(models.Model):
+    Equipment = models.ForeignKey(
+        'gissmo.Equipment', related_name='states', on_delete=models.DO_NOTHING)
+    data = JSONField()
+
+    def __str__(self):
+        return '%s' % self.data
+
+    def __unicode__(self):
+        return '%s' % self.data
+
+
+class Channel(models.Model):
+    name = models.CharField(max_length=254, verbose_name='Ex. FR.CHMF.00.BHZ')
+    span = DateTimeRangeField(
+        verbose_name='Date time range (start/end)',
+        help_text='If no end date for the moment, just add start date')
+    models.ManyToManyField('gissmo.State')
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
