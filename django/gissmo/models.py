@@ -47,6 +47,36 @@ class Equipment(models.Model):
         return '%s' % self.name
 
 
+class Parameter(models.Model):
+    name = models.CharField(max_length=254)
+    model = models.ForeignKey(
+        'gissmo.Model', related_name='parameters', on_delete=models.DO_NOTHING)
+    default = models.ForeignKey(
+        'gissmo.Value',
+        related_name='is_default',
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True)
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+
+class Value(models.Model):
+    name = models.CharField(max_length=254)
+    parameter = models.ForeignKey(
+        'gissmo.Parameter', related_name='values', on_delete=None)
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def __unicode__(self):
+        return '%s' % self.name
+
+
 class State(models.Model):
     Equipment = models.ForeignKey(
         'gissmo.Equipment', related_name='states', on_delete=models.DO_NOTHING)
