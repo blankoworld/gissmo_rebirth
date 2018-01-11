@@ -80,6 +80,9 @@ class Value(models.Model):
 class State(models.Model):
     Equipment = models.ForeignKey(
         'gissmo.Equipment', related_name='states', on_delete=models.DO_NOTHING)
+    span = DateTimeRangeField(
+        verbose_name='Date time range (start/end)',
+        help_text='If no end date for the moment, just add start date')
     data = JSONField()
 
     def __str__(self):

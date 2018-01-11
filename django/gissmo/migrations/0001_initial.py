@@ -80,6 +80,11 @@ start date',
                     on_delete=django.db.models.deletion.DO_NOTHING,
                     related_name='states',
                     to='gissmo.Equipment')),
+                ('state',
+                 django.contrib.postgres.fields.ranges.DateTimeRangeField(
+                     help_text='If no end date for the moment, just add \
+start date',
+                     verbose_name='Date time range (start/end)')),
             ], ),
         migrations.CreateModel(
             name='Type',
