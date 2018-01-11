@@ -1,6 +1,7 @@
 Django==1.11.9
 flake8
 pep8
+pre-commit
 psycopg2
 pylint
 pylint-django
