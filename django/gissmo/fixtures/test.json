@@ -493,5 +493,23 @@
     "action_flag": 1,
     "change_message": "[{\"added\": {}}]"
   }
+},
+{
+  "model": "gissmo.state",
+  "pk": 1,
+  "fields": {
+      "equipment": 1,
+      "span": "{\"bounds\": \"[)\", \"lower\": \"2018-01-01T10:48:00\", \"upper\": null}",
+      "data": {
+          "dip": "90",
+          "params": {
+              "gain": "2",
+              "period": "60",
+              "sensivity": "1600"
+          },
+          "azimuth": "0",
+          "station_code": "WLS"
+      }
+  }
 }
 ]

@@ -76,11 +76,11 @@ start date',
                     serialize=False,
                     verbose_name='ID')),
                 ('data', django.contrib.postgres.fields.jsonb.JSONField()),
-                ('Equipment', models.ForeignKey(
+                ('equipment', models.ForeignKey(
                     on_delete=django.db.models.deletion.DO_NOTHING,
                     related_name='states',
                     to='gissmo.Equipment')),
-                ('state',
+                ('span',
                  django.contrib.postgres.fields.ranges.DateTimeRangeField(
                      help_text='If no end date for the moment, just add \
 start date',
@@ -140,4 +140,8 @@ start date',
                 on_delete=django.db.models.deletion.DO_NOTHING,
                 related_name='equipments',
                 to='gissmo.Model'), ),
+        migrations.AddField(
+            model_name='channel',
+            name='states',
+            field=models.ManyToManyField(to='gissmo.State'), ),
     ]

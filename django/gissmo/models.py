@@ -78,7 +78,7 @@ class Value(models.Model):
 
 
 class State(models.Model):
-    Equipment = models.ForeignKey(
+    equipment = models.ForeignKey(
         'gissmo.Equipment', related_name='states', on_delete=models.DO_NOTHING)
     span = DateTimeRangeField(
         verbose_name='Date time range (start/end)',
@@ -86,10 +86,10 @@ class State(models.Model):
     data = JSONField()
 
     def __str__(self):
-        return '%s' % self.data
+        return '%s - %s' % (self.equipment.name, self.span)
 
     def __unicode__(self):
-        return '%s' % self.data
+        return '%s - %s' % (self.equipment.name, self.span)
 
 
 class Channel(models.Model):
@@ -97,7 +97,7 @@ class Channel(models.Model):
     span = DateTimeRangeField(
         verbose_name='Date time range (start/end)',
         help_text='If no end date for the moment, just add start date')
-    models.ManyToManyField('gissmo.State')
+    states = models.ManyToManyField('gissmo.State')
 
     def __str__(self):
         return '%s' % self.name
