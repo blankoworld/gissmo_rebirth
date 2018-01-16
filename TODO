@@ -14,6 +14,7 @@
     * step1: choix de l'équipement (+ bouton "new state" depuis Equipment) et la Date de début (supérieure à la purchase date)
     * step2: affichage des paramètres en fonction du modèle de l'équipement choisi et d'une place (et un code station si la place est accolée)
     * step3 (optionnel): choix d'un canal pour le lier avec (step2 ajouter une coche)
+  * Tester l'overlap dans le clean() du Form pour afficher un message d'erreur parlant
 
 ## Channel
 

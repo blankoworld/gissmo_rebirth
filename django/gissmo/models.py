@@ -1,6 +1,9 @@
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 class Type(models.Model):
@@ -92,6 +95,20 @@ class State(models.Model):
         return '%s - %s' % (self.equipment.name, self.span)
 
 
+@receiver(pre_save, sender=State)
+def state_overlap(sender, instance, raw, using, update_fields, **kwargs):
+    """
+    Check that no other State exists between these two dates.
+    Two states cannot have "None" as end date.
+    """
+    if instance:
+        overlaps_count = State.objects.filter(
+            equipment_id=instance.equipment_id,
+            span__overlap=instance.span).count()
+        if overlaps_count > 0:
+            raise ValidationError('Another state overlaps this one!')
+
+
 class Channel(models.Model):
     name = models.CharField(max_length=254, verbose_name='Ex. FR.CHMF.00.BHZ')
     span = DateTimeRangeField(
@@ -115,7 +132,12 @@ class Station(models.Model):
 
 class Place(models.Model):
     name = models.CharField(max_length=254)
-    station = models.ForeignKey('gissmo.Station', related_name='places', on_delete=models.DO_NOTHING, null=True, blank=True)
+    station = models.ForeignKey(
+        'gissmo.Station',
+        related_name='places',
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True)
 
     def __str__(self):
         return '%s' % (self.name)
