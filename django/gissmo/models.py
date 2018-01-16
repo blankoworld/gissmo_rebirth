@@ -104,3 +104,18 @@ class Channel(models.Model):
 
     def __unicode__(self):
         return '%s' % self.name
+
+
+class Station(models.Model):
+    name = models.CharField(max_length=10, verbose_name='Station code')
+
+    def __str__(self):
+        return '%s' % self.name
+
+
+class Place(models.Model):
+    name = models.CharField(max_length=254)
+    station = models.ForeignKey('gissmo.Station', related_name='places', on_delete=models.DO_NOTHING, null=True, blank=True)
+
+    def __str__(self):
+        return '%s' % (self.name)

@@ -5,6 +5,7 @@ from gissmo.models import Parameter
 from gissmo.models import State
 from gissmo.models import Type
 from gissmo.models import Value
+from gissmo.models import Place, Station
 
 from django.contrib import admin
 
@@ -50,8 +51,20 @@ class ChannelAdmin(admin.ModelAdmin):
     inlines = [ChannelStateInline]
 
 
+class PlaceInline(admin.TabularInline):
+    model = Place
+    extra = 2
+
+
+class StationAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+    inlines = [PlaceInline]
+
+
 admin.site.register(Type, TypeAdmin)
 admin.site.register(Model, ModelAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Parameter, ParameterAdmin)
 admin.site.register(Channel, ChannelAdmin)
+admin.site.register(Station, StationAdmin)
