@@ -126,6 +126,30 @@ class Channel(models.Model):
 class Station(models.Model):
     name = models.CharField(max_length=10, verbose_name='Station code')
 
+    def get_current_equipment_ids(self):
+        """
+        Get equipment that should be currently in use in this Station.
+        As State have overlap check at creation/update, we cannot have a
+        State on 2 stations.
+
+        For that, we search State that have no end and which station_code is
+        those from current station.
+        """
+        return list(
+            State.objects.filter(
+                data__station_code=self.name, span__endswith__isnull=True)
+            .values_list('equipment_id', flat=True))
+
+    def get_equipment_ids(self):
+        """
+        Get all equipments for this Station. Current one, old one, etc.
+
+        distinct() should display equipment_id once
+        """
+        return list(
+            State.objects.filter(data__station_code=self.name).distinct(
+                'equipment_id').values_list('equipment_id', flat=True))
+
     def __str__(self):
         return '%s' % self.name
 
