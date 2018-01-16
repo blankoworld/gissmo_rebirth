@@ -1,6 +1,7 @@
 from gissmo.models import Channel
 from gissmo.models import Equipment
 from gissmo.models import Model
+from gissmo.models import Notebook
 from gissmo.models import Parameter
 from gissmo.models import Place
 from gissmo.models import State
@@ -55,13 +56,18 @@ class ChannelAdmin(admin.ModelAdmin):
 
 class PlaceInline(admin.TabularInline):
     model = Place
-    extra = 2
+    extra = 1
+
+
+class NotebookInline(admin.TabularInline):
+    model = Notebook
+    extra = 0
 
 
 class StationAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
-    inlines = [PlaceInline]
+    inlines = [PlaceInline, NotebookInline]
 
 
 admin.site.register(Type, TypeAdmin)

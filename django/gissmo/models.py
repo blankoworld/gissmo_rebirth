@@ -165,3 +165,15 @@ class Place(models.Model):
 
     def __str__(self):
         return '%s' % (self.name)
+
+
+class Notebook(models.Model):
+    date = models.DateTimeField()
+    comment = models.TextField()
+    station = models.ForeignKey(
+        'gissmo.Station',
+        related_name='notebooks',
+        on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return '%s - %s' % (self.date, self.comment[:30])
