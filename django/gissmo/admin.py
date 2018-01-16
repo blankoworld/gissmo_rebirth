@@ -2,10 +2,11 @@ from gissmo.models import Channel
 from gissmo.models import Equipment
 from gissmo.models import Model
 from gissmo.models import Parameter
+from gissmo.models import Place
 from gissmo.models import State
+from gissmo.models import Station
 from gissmo.models import Type
 from gissmo.models import Value
-from gissmo.models import Place, Station
 
 from django.contrib import admin
 
@@ -47,6 +48,7 @@ class ChannelStateInline(admin.TabularInline):
 
 class ChannelAdmin(admin.ModelAdmin):
     list_display = ('name', 'span')
+    fields = ('name', 'span')
 
     inlines = [ChannelStateInline]
 
@@ -57,7 +59,7 @@ class PlaceInline(admin.TabularInline):
 
 
 class StationAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', )
 
     inlines = [PlaceInline]
 
