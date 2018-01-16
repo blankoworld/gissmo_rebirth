@@ -1,0 +1,19 @@
+# TODO
+
+## Commun
+
+  * améliorer l'affichage des DateTimeRange ! (Cf. gissmo 2.0 qui doit avoir un code à ce sujet)
+
+## State
+
+  * initialiser les valeurs à défaut suivant l'équipement donné (avec les paramètres de l'équipement, etc.)
+  * créer un bouton "create State" depuis Equipment
+  * Lister les états sous Equipment (avec juste les dates et quelques paramètres), puis permettre d'afficher un détail en allant sur la page spécifique d'un State ?
+  * Comment enlever le menu "State" dans l'accueil de l'admin ? Idée : ne pas faire de admin.site.register(State), mais créer des URL /state/edit et /state/show pour afficher/éditer les états
+
+## Channel
+
+  * wizard pour créer le canal : 
+    * step1: d'abord choisir la station et la date (range), le channel code, le location code et le code Station (à la soumission vérifier que code station existe, et de manière unique)
+    * step2: choisir les équipements (afficher 3 (voire plus ?) champs pour choisir un équipement dont le state a un jour été sur une place de cette station en fonction de la date)
+    * step3: afficher les states possibles pour ces équipements (dans les dates fournies et qui n'ont pas déjà un lien avec un Channel) => problème car on a 3 channels sur un même équipement. Donc pas possible de bloquer en fonction de ça… (sinon il faudrait 3 State par équipement…)
