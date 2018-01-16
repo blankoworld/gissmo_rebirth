@@ -10,6 +10,10 @@
   * créer un bouton "create State" depuis Equipment
   * Lister les états sous Equipment (avec juste les dates et quelques paramètres), puis permettre d'afficher un détail en allant sur la page spécifique d'un State ?
   * Comment enlever le menu "State" dans l'accueil de l'admin ? Idée : ne pas faire de admin.site.register(State), mais créer des URL /state/edit et /state/show pour afficher/éditer les états
+  * wizard pour créer un State : 
+    * step1: choix de l'équipement (+ bouton "new state" depuis Equipment) et la Date de début (supérieure à la purchase date)
+    * step2: affichage des paramètres en fonction du modèle de l'équipement choisi et d'une place (et un code station si la place est accolée)
+    * step3 (optionnel): choix d'un canal pour le lier avec (step2 ajouter une coche)
 
 ## Channel
 
@@ -17,3 +21,13 @@
     * step1: d'abord choisir la station et la date (range), le channel code, le location code et le code Station (à la soumission vérifier que code station existe, et de manière unique)
     * step2: choisir les équipements (afficher 3 (voire plus ?) champs pour choisir un équipement dont le state a un jour été sur une place de cette station en fonction de la date)
     * step3: afficher les states possibles pour ces équipements (dans les dates fournies et qui n'ont pas déjà un lien avec un Channel) => problème car on a 3 channels sur un même équipement. Donc pas possible de bloquer en fonction de ça… (sinon il faudrait 3 State par équipement…)
+  * ajouter created_at, updated_at + mise à jour de updated_at en pre_save chaque fois
+
+## Notebook
+
+  * sur Station (date début, description)
+  * un peu comme Issue
+
+## Intervention
+
+  * Mélange de Notebook et State (il se passe quelque chose au début d'un State, et à la fin) et Channel (comme State)
