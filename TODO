@@ -1,9 +1,5 @@
 # TODO
 
-## Commun
-
-  * améliorer l'affichage des DateTimeRange ! (Cf. gissmo 2.0 qui doit avoir un code à ce sujet)
-
 ## State
 
   * initialiser les valeurs à défaut suivant l'équipement donné (avec les paramètres de l'équipement, etc.)
@@ -15,6 +11,7 @@
     * step2: affichage des paramètres en fonction du modèle de l'équipement choisi et d'une place (et un code station si la place est accolée)
     * step3 (optionnel): choix d'un canal pour le lier avec (step2 ajouter une coche)
   * Tester l'overlap dans le clean() du Form pour afficher un message d'erreur parlant
+  * Migrer DOC d'intervention vers State ? Si oui, que faire d'une doc d'intervention sur une station ? On la lie à quoi ?
 
 ## Channel
 
@@ -26,9 +23,17 @@
 
 ## Notebook
 
-  * sur Station (date début, description)
-  * un peu comme Issue
+  * ajouter l'utilisateur et l'organisme présent à ce moment là (ça peut être que EDF par exemple, ou qu'une personne de l'EOST)
 
 ## Intervention
 
   * Mélange de Notebook et State (il se passe quelque chose au début d'un State, et à la fin) et Channel (comme State)
+
+## Migration
+
+Créer un nouveau script de migration depuis 0 en Django.
+
+  1. Utiliser Django plutôt que Peewee
+  2. Adapter pour en faire un "runscript"
+  3. Enlever tout ce qui touche à Historique
+  4. Adapter les principales fonctions de transitions en Django (celles pour les types d'équipement, les modèles, les stations, les places, les builts, etc.)
