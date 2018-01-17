@@ -8,8 +8,10 @@ from gissmo.models import State
 from gissmo.models import Station
 from gissmo.models import Type
 from gissmo.models import Value
+from gissmo.widgets import DateRangeWidget
 
 from django.contrib import admin
+from django.contrib.postgres.fields.ranges import DateTimeRangeField
 
 
 class TypeAdmin(admin.ModelAdmin):
@@ -23,6 +25,12 @@ class ModelAdmin(admin.ModelAdmin):
 class StateInline(admin.TabularInline):
     model = State
     extra = 0
+
+    formfield_overrides = {
+        DateTimeRangeField: {
+            'widget': DateRangeWidget
+        },
+    }
 
 
 class EquipmentAdmin(admin.ModelAdmin):
@@ -52,6 +60,12 @@ class ChannelAdmin(admin.ModelAdmin):
     fields = ('name', 'span')
 
     inlines = [ChannelStateInline]
+
+    formfield_overrides = {
+        DateTimeRangeField: {
+            'widget': DateRangeWidget
+        },
+    }
 
 
 class PlaceInline(admin.TabularInline):
