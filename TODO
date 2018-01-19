@@ -45,6 +45,7 @@ Créer un nouveau script de migration depuis 0 en Django.
   * ajouter un champ 'influe sur la réponse instrumentale' coché par défaut sur tous les paramètres des modèles
   * ajouter organisme à Notebook (Station)
   * créer un objet Timeline, avec lien obligatoire vers Equipment. Champs : date, user, equipment_id, paramètre, valeur, note (optionnel)
+  * supprimer le champ "parent" sur l'équipement
   * champs sur Équipement : status, storage_format, clock_drift, clock_drift_unit, adresses IP et Service sont en lecture seule
   * wizard de modification des paramètres de l'équipement avec toujours date + user. 1/ garder sur l'équipement les dernières valeurs modifiées 2/ enregistrer autant de lignes de Timeline que de paramètres modifiés. IDÉE : inclure ce "wizard" sur Equipement lui-même ? Avec les bons boutons/champs supplémentaires pour valider le formulaire de changement
   * ajouter l'élément State avec les champs place, station_code, dip, azimuth, latitude, longitude, elevation et un champ data contenant "depth" (si Sensor/Hybrid) et les paramètres du modèle à aujourd'hui
