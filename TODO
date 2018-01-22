@@ -47,21 +47,30 @@ Créer un nouveau script de migration depuis 0 en Django.
   * créer un objet Timeline, avec lien obligatoire vers Equipment. Champs : date, user, equipment_id, paramètre, valeur, note (optionnel)
   * supprimer le champ "parent" sur l'équipement
   * champs sur Équipement : status, storage_format, clock_drift, clock_drift_unit, adresses IP et Service sont en lecture seule
+  * ajouter le champ 'status' pour l'Équipement et laisser l'autre nommé "State". Adapter le formulaire et chercher les répercutions sur le code existant (avec le mot clé State)
   * wizard de modification des paramètres de l'équipement avec toujours date + user. 1/ garder sur l'équipement les dernières valeurs modifiées 2/ enregistrer autant de lignes de Timeline que de paramètres modifiés. IDÉE : inclure ce "wizard" sur Equipement lui-même ? Avec les bons boutons/champs supplémentaires pour valider le formulaire de changement
   * ajouter l'élément State avec les champs place, station_code, dip, azimuth, latitude, longitude, elevation et un champ data contenant "depth" (si Sensor/Hybrid) et les paramètres du modèle à aujourd'hui
+  * À la création de l'équipement, créer des lignes de Timeline sur les champs spécifiques (avec l'utilisateur courant et la purchase_date comme date)
   * créer un wizard de création du State ? (bouton "New State" sur Équipement ?)
   * créer le wizard de création de channels => faut-il propose de choisir simplement les équipements dans la première étape (5 équipements maxi en fonction des dates) et s'occuper automatiquement de prendre les States correspondants et dans l'étape 2 d'afficher les paramètres de ces équipements ?
   * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
   * adapter le wizard 3 channels pour générer les States si besoin, ou encore vérifier si les States existe => à réfléchir
   * adapter le wizard de fermeture de channels
   * créer le Wizard de changement d'un State pour un Channel ? (peut-être juste avoir un bouton "corriger" à côté de chaque équipement)
-  * adapter StationXML pour fonctionner
+  * adapter StationXML pour fonctionner (_get_obspy_equipment par exemple)
   * faire l'affichage d'une station pour avoir :
     * la liste des équipements en cours
     * la liste des équipements passés sur cette Station
     * l'historique des modifications (sorte de mélange entre Notebooks Station, Timeline Equipment et Channel)
-  * adapter la fonction d'état "state" (ou status ?) d'une station
+  * adapter la fonction d'état "state" (ou status ?) d'une Station
+  * vérifier qu'au changement de Place d'un Équipement il n'y ait pas de Channel ouvert. Cas échéant : demander à l'utilisateur de fermer le canal. Ce qui devrait mettre une date de fin au State et au canal et créer un nouveau State. Si changement de Place de l'équipement (quand aucun canal ouvert dessus), alors on adapte le State en conséquence (le dernier State, trié par date).
   * vérifier que Station Map fonctionne encore
+  * API : vérifier le paragraphe suivant pour toutes les modifications nécessaires
+
+## API
+
+  * ajouter le champ change_response de Parameter
+  * ajouter l'objet "Notebook" de Station (sous le nom station_notebooks ?)
   * créer une API pour Channel qui mette à disposition les bonnes informations : 
     * supprimer channel_config sûrement
     * trouver comment rendre tous les paramètres du canal dans Channel
