@@ -49,6 +49,10 @@ Créer un nouveau script de migration depuis 0 en Django.
   * champs sur Équipement : status, storage_format, clock_drift, clock_drift_unit, adresses IP et Service sont en lecture seule
   * ajouter le champ 'status' pour l'Équipement et laisser l'autre nommé "State". Adapter le formulaire et chercher les répercutions sur le code existant (avec le mot clé State)
   * wizard de modification des paramètres de l'équipement avec toujours date + user. 1/ garder sur l'équipement les dernières valeurs modifiées 2/ enregistrer autant de lignes de Timeline que de paramètres modifiés. IDÉE : inclure ce "wizard" sur Equipement lui-même ? Avec les bons boutons/champs supplémentaires pour valider le formulaire de changement
+  * Scinder le wizard "Change equipment parameter" en 2 : d'abord l'utilisateur et la date, puis les paramètres (en prenant les derniers paramètres connus):
+    * à l'affichage initial, on doit présenter les dernières valeurs connues
+    * si pas de paramètres (dans Timeline), il faudra créer une ligne de Timeline de base, puis la nouvelle valeur
+  * Au save d'un Equipment: vérifier si purchase_date a changé. Si oui, changer toutes les lignes de Timeline qui ont cette date avec la nouvelle date.
   * ajouter l'élément State avec les champs place, station_code, dip, azimuth, latitude, longitude, elevation et un champ data contenant "depth" (si Sensor/Hybrid) et les paramètres du modèle à aujourd'hui
   * À la création de l'équipement, créer des lignes de Timeline sur les champs spécifiques (avec l'utilisateur courant et la purchase_date comme date)
   * créer un wizard de création du State ? (bouton "New State" sur Équipement ?)
@@ -74,3 +78,4 @@ Créer un nouveau script de migration depuis 0 en Django.
   * créer une API pour Channel qui mette à disposition les bonnes informations : 
     * supprimer channel_config sûrement
     * trouver comment rendre tous les paramètres du canal dans Channel
+  * mettre Timeline en lecture seule
