@@ -53,10 +53,10 @@ Créer un nouveau script de migration depuis 0 en Django.
     * à l'affichage initial, on doit présenter les dernières valeurs connues
     * si pas de paramètres (dans Timeline), il faudra créer une ligne de Timeline de base, puis la nouvelle valeur
   * Au save d'un Equipment: vérifier si purchase_date a changé. Si oui, changer toutes les lignes de Timeline qui ont cette date avec la nouvelle date.
-
   * À la création de l'équipement, créer des lignes de Timeline sur les champs spécifiques (avec l'utilisateur courant et la purchase_date comme date)
 
   * ajouter l'élément State avec les champs place, station_code, dip, azimuth, latitude, longitude, elevation et un champ data contenant "depth" (si Sensor/Hybrid) et les paramètres du modèle à aujourd'hui
+
   * créer un wizard de création du State ? (bouton "New State" sur Équipement ?)
   * créer le wizard de création de channels => faut-il propose de choisir simplement les équipements dans la première étape (5 équipements maxi en fonction des dates) et s'occuper automatiquement de prendre les States correspondants et dans l'étape 2 d'afficher les paramètres de ces équipements ?
   * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
@@ -70,7 +70,7 @@ Créer un nouveau script de migration depuis 0 en Django.
     * l'historique des modifications (sorte de mélange entre Notebooks Station, Timeline Equipment et Channel)
   * adapter la fonction d'état "state" (ou status ?) d'une Station
   * vérifier qu'au changement de Place d'un Équipement il n'y ait pas de Channel ouvert. Cas échéant : demander à l'utilisateur de fermer le canal. Ce qui devrait mettre une date de fin au State et au canal et créer un nouveau State. Si changement de Place de l'équipement (quand aucun canal ouvert dessus), alors on adapte le State en conséquence (le dernier State, trié par date).
-  * Équipement : supprimer la table configuration ? Si oui, le post_save aussi (add_configuration)
+  * Équipement : supprimer la table configuration ? Si oui, le post_save aussi (add_configuration) 2/ Si on supprime pas, il faut mettre à jour la Configuration à chaque MàJ du Timeline SI c'est la dernière Timeline…
   * vérifier que Station Map fonctionne encore
   * API : vérifier le paragraphe suivant pour toutes les modifications nécessaires
 
