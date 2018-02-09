@@ -77,24 +77,22 @@ Créer un nouveau script de migration depuis 0 en Django.
 
 ## Solution 5 : Ajout des paramètres à liste non finie dans les paramètres de l'équipement et Configuration
 
-
 ### Fini
 
   * Adapter la table Value pour avoir un champ "default" (booléen). Le booléen est par défaut à False.
   * Contrainte sur parameter_id, value dans Value (pour pas avoir 2 fois la même valeur)
+  * Vérifier qu'à la création d'un équipement on crée chaque ligne de Configuration avec les paramètres par défaut (add_configuration sûrement)
+  * Sur Parameter afficher la liste des Value en Inline, avec le champ "default" pour chaque valeur (pour choisir lequel est par défaut
 
 ### À faire
 
-  * Vérifier à la création d'un équipement que sa configuration par défaut soit utilisée
   * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
-    * créer un champ calculé have\_default\_value
+    * FAIT | créer un champ calculé have\_default\_value
     * utiliser ce champ calculé pour l'affichage du Warning
-  * Sur Parameter afficher la liste des Value en Inline, avec le champ "default" pour chaque valeur (pour choisir lequel est par défaut
   * À l'enregistrement du Parameter, signaler à l'utilisateur s'il a plusieurs valeurs par défaut (encart WARNING)
   * Adapter le "Change timeline" de l'équipement pour les paramètres d'un équipement et ses valeurs (toujours avec une date de début et un utilisateur qui a fait la modification)
   * Pour la saisie des paramètres d'un équipement : si qu'une seule ligne (maximum) de Value pour un paramètre donné : le champ est libre pour l'utilisateur. Si plusieurs valeurs : menu déroulant avec les valeurs possibles pour ce paramètre.
   * Ajouter le champ "start" sur Configuration (dans module Equipment). Aussi une note comme sur Timeline ?
-  * Vérifier qu'à la création d'un équipement on crée chaque ligne de Configuration avec les paramètres par défaut (add_configuration sûrement)
   * faire une liste des paramètres qui iront sur les paramètres des équipements désormais : 
     * storage_format
     * clock_drift
@@ -110,6 +108,8 @@ Créer un nouveau script de migration depuis 0 en Django.
   * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit.
   * faire une alerte à la création d'un Channel si les équipements choisis ne disposent pas des paramètres obligatoires habituels (dip et azimuth pour Sensor, clock_drift/unit et storage\_format pour Datalogger, etc.) => sûrement dans le Wizard entre deux étapes
   * supprimer l'objet Timeline
+  * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
+  * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * à la migration depuis Gissmo 1.9 : sample\_rate de Channel devra devenir un paramètre du Datalogger et/ou de l'Hybrid de la chaîne d'acquisition
