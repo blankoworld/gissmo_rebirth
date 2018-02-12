@@ -83,33 +83,36 @@ Créer un nouveau script de migration depuis 0 en Django.
   * Contrainte sur parameter_id, value dans Value (pour pas avoir 2 fois la même valeur)
   * Vérifier qu'à la création d'un équipement on crée chaque ligne de Configuration avec les paramètres par défaut (add_configuration sûrement)
   * Sur Parameter afficher la liste des Value en Inline, avec le champ "default" pour chaque valeur (pour choisir lequel est par défaut
+  * supprimer storage\_format, clock\_drift et clock\_drift\_unit des équipements (ça deviendra des paramètres d'un équipement)
+  * Ajouter le champ "start" sur Configuration (dans module Equipment). Aussi une note comme sur Timeline ?
+  * vérifier contrainte unique sur Station code (unique=True sur code/name)
+  * créer une table de relation entre Channel et Configuration (manytomany sur channel vers Configuration)
+  * sur Equipment garder l'historique des Place avec quelque chose de similaire à Timeline (table entre Equipment et Place avec un start)
+  * supprimer l'objet Timeline
 
 ### À faire
 
+  * Mettre les Status en dur (liste prédéfinie). Savoir que "New" est celui par défaut. Et que Failure et Broken sont ceux qui mettent une Station en état Failure.
   * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
     * FAIT | créer un champ calculé have\_default\_value
     * utiliser ce champ calculé pour l'affichage du Warning
   * À l'enregistrement du Parameter, signaler à l'utilisateur s'il a plusieurs valeurs par défaut (encart WARNING)
-  * Adapter le "Change timeline" de l'équipement pour les paramètres d'un équipement et ses valeurs (toujours avec une date de début et un utilisateur qui a fait la modification)
+  * WIZARD Equipment : Adapter le "Change timeline" de l'équipement pour les paramètres d'un équipement et ses valeurs (toujours avec une date de début et un utilisateur qui a fait la modification)
   * Pour la saisie des paramètres d'un équipement : si qu'une seule ligne (maximum) de Value pour un paramètre donné : le champ est libre pour l'utilisateur. Si plusieurs valeurs : menu déroulant avec les valeurs possibles pour ce paramètre.
-  * Ajouter le champ "start" sur Configuration (dans module Equipment). Aussi une note comme sur Timeline ?
   * faire une liste des paramètres qui iront sur les paramètres des équipements désormais : 
-    * storage_format
-    * clock_drift
-    * clock\_drift\_unit
+    * storage_format (datalogger)
+    * clock_drift (datalogger)
+    * clock\_drift\_unit (datalogger)
     * sample_rate (datalogger/hybrid)
-  * supprimer storage\_format, clock\_drift et clock\_drift\_unit des équipements (ça deviendra des paramètres d'un équipement)
-  * supprimer sample_rate de Channel car il devient également un paramètre des équipements : il n'est plus nécessaire dans Channel
-  * créer une table de relation entre Channel et Configuration (manytomany sur channel vers Configuration)
-  * vérifier contrainte unique sur Station code (unique=True sur code/name)
-  * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change_response" = True
-  * le wizard de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul
-  * sur Equipment garder l'historique des Place avec quelque chose de similaire à Timeline (table entre Equipment et Place avec un start)
-  * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit.
+  * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
+  * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul
+  * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique des lat/long/elev. puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit. Et qu'une Place ne devrait pas se déplacer de toute manière. Même si c'est le cas, on crée une nouvelle Place ^_^
   * faire une alerte à la création d'un Channel si les équipements choisis ne disposent pas des paramètres obligatoires habituels (dip et azimuth pour Sensor, clock_drift/unit et storage\_format pour Datalogger, etc.) => sûrement dans le Wizard entre deux étapes
-  * supprimer l'objet Timeline
   * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
   * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
+  * Vérifier, que ce soit à la création du modèle ou de l'équipement, que pour un Sensor on ait certains paramètres d'existant, pour un Datalogger d'autres paramètres (storage format par exemple).
+  * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
+  * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * à la migration depuis Gissmo 1.9 : sample\_rate de Channel devra devenir un paramètre du Datalogger et/ou de l'Hybrid de la chaîne d'acquisition
