@@ -91,12 +91,12 @@ Créer un nouveau script de migration depuis 0 en Django.
   * supprimer l'objet Timeline
   * WIZARD Equipment : Adapter le "Change timeline" de l'équipement pour les paramètres d'un équipement et ses valeurs (toujours avec une date de début et un utilisateur qui a fait la modification)
   * WIZARD Equipment : vérifier les champs dits "libres"
+  * Equipment : n'afficher par défaut que la dernière configuration connue (dernières lignes de Configuration)
 
 ### À faire
 
-  * Equipment : n'afficher par défaut que la dernière configuration connue (dernières lignes de Configuration)
   * Equipment : à la sauvegarde, si on change purchase_date, mettre à jour les lignes de Configuration adéquates !
-  * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). Rendre ces valeurs modifiables
+  * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
   * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
     * FAIT | créer un champ calculé have\_default\_value
     * utiliser ce champ calculé pour l'affichage du Warning
@@ -112,6 +112,7 @@ Créer un nouveau script de migration depuis 0 en Django.
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
   * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique des lat/long/elev. puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit. Et qu'une Place ne devrait pas se déplacer de toute manière. Même si c'est le cas, on crée une nouvelle Place ^_^
+  * Gestion de l'historique des Place => soit on fait quelque chose à part, soit on l'ajoute dans "Configure". Mais à ce moment là il faudrait aussi un utilisateur et une date !
   * faire une alerte à la création d'un Channel si les équipements choisis ne disposent pas des paramètres obligatoires habituels (dip et azimuth pour Sensor, clock_drift/unit et storage\_format pour Datalogger, etc.) => sûrement dans le Wizard entre deux étapes
   * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
   * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
@@ -121,6 +122,7 @@ Créer un nouveau script de migration depuis 0 en Django.
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * à la migration depuis Gissmo 1.9 : sample\_rate de Channel devra devenir un paramètre du Datalogger et/ou de l'Hybrid de la chaîne d'acquisition
+  * Network : changer les champs start/end par un span (DateTimeRangeField)
 
 ## API
 
