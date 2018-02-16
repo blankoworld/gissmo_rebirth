@@ -110,6 +110,8 @@ Créer un nouveau script de migration depuis 0 en Django.
     * clock\_drift\_unit (datalogger)
     * sample_rate (datalogger/hybrid)
     * status
+    * dip (sensor)
+    * azimuth (sensor)
   * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
