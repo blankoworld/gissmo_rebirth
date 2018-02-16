@@ -92,10 +92,10 @@ Créer un nouveau script de migration depuis 0 en Django.
   * WIZARD Equipment : Adapter le "Change timeline" de l'équipement pour les paramètres d'un équipement et ses valeurs (toujours avec une date de début et un utilisateur qui a fait la modification)
   * WIZARD Equipment : vérifier les champs dits "libres"
   * Equipment : n'afficher par défaut que la dernière configuration connue (dernières lignes de Configuration)
+  * Equipment : à la sauvegarde, si on change purchase_date, mettre à jour les lignes de Configuration adéquates !
 
 ### À faire
 
-  * Equipment : à la sauvegarde, si on change purchase_date, mettre à jour les lignes de Configuration adéquates !
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
   * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
     * FAIT | créer un champ calculé have\_default\_value
@@ -103,11 +103,13 @@ Créer un nouveau script de migration depuis 0 en Django.
   * À l'enregistrement du Parameter, signaler à l'utilisateur s'il a plusieurs valeurs par défaut (encart WARNING)
   * Pour la saisie des paramètres d'un équipement : si qu'une seule ligne (maximum) de Value pour un paramètre donné : le champ est libre pour l'utilisateur. Si plusieurs valeurs : menu déroulant avec les valeurs possibles pour ce paramètre.
   * Mettre les Status en dur (liste prédéfinie). Savoir que "New" est celui par défaut. Et que Failure et Broken sont ceux qui mettent une Station en état Failure.
-  * faire une liste des paramètres qui iront sur les paramètres des équipements désormais : 
+  * Création automatique de certains paramètres pour un modèle d'équipement défini (suivant la liste d'après)
+  * Faire une liste des paramètres qui iront sur les paramètres des équipements désormais : 
     * storage_format (datalogger)
     * clock_drift (datalogger)
     * clock\_drift\_unit (datalogger)
     * sample_rate (datalogger/hybrid)
+    * status
   * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
@@ -119,10 +121,12 @@ Créer un nouveau script de migration depuis 0 en Django.
   * Vérifier, que ce soit à la création du modèle ou de l'équipement, que pour un Sensor on ait certains paramètres d'existant, pour un Datalogger d'autres paramètres (storage format par exemple).
   * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
   * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
+  * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * à la migration depuis Gissmo 1.9 : sample\_rate de Channel devra devenir un paramètre du Datalogger et/ou de l'Hybrid de la chaîne d'acquisition
   * Network : changer les champs start/end par un span (DateTimeRangeField)
+  * Adapter Station Map
 
 ## API
 
