@@ -37,6 +37,7 @@ Créer un nouveau script de migration depuis 0 en Django.
   2. Adapter pour en faire un "runscript"
   3. Enlever tout ce qui touche à Historique
   4. Adapter les principales fonctions de transitions en Django (celles pour les types d'équipement, les modèles, les stations, les places, les builts, etc.)
+  5. Quand on migre les channels, demander à Maxime quelles sont les règles ZNE pour récupérer soit le dip, soit l'azimuth, etc.
 
 
 ## Solution 4 : Timeline
@@ -96,7 +97,16 @@ Créer un nouveau script de migration depuis 0 en Django.
 
 ### À faire
 
+  * Place : ajouter une date de fin
+  * sample_rate n'est PAS un paramètre, il ira dans Channel
+  * filter est aussi un champ de Channel (champ libre non obligatoire)
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
+  * Equipment : ajouter un bouton "Move Equipment" pour déplacer l'équipement de Place. Utiliser les même étapes que le Wizard "Configure" : une date, un user, et on déplace ! SAUF si à cette date la Place a une date de fin !
+  * Equipment : rendre la Place en lecture seule (sauf à la création). Pour la changer, il faudra utiliser le bouton "Move equipment"
+  * Parameter : à la création d'un Parameter => l'ajouter avec sa valeur par défaut à tous les équipements depuis le début
+  * Parameter : à la suppression d'un Parameter => l'enlever de tous les équipements => demander s'il faut réellement l'enlever ? Même pour historique on ne garde plus la valeur ?
+  * Parameter : une valeur par défaut EST obligatoire ! Faire du Javascript ou trouver un stratagème pour qu'on ait toujours une et une seule valeur par défaut !
+  * Parameter : ne pas permettre de prendre DEUX valeurs par défaut. Toujours une. Obligatoire
   * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
     * FAIT | créer un champ calculé have\_default\_value
     * utiliser ce champ calculé pour l'affichage du Warning
@@ -108,12 +118,12 @@ Créer un nouveau script de migration depuis 0 en Django.
     * storage_format (datalogger)
     * clock_drift (datalogger)
     * clock\_drift\_unit (datalogger)
-    * sample_rate (datalogger/hybrid)
     * status
     * dip (sensor)
     * azimuth (sensor)
-  * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul
+  * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul. Ajouter "filter" comme champ de saisie possible lors de la création des Channels
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
+  * Channel wizard : Demander le sample rate, le Sensor de départ, le nombre de channel (1 ou 3), le type de nommage des canaux (ZNE/Z12/Z23/Champs libre) et la date PUIS on affiche les autres équipements possibles (autres que SENSOR) PUIS on affiche un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
   * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique des lat/long/elev. puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit. Et qu'une Place ne devrait pas se déplacer de toute manière. Même si c'est le cas, on crée une nouvelle Place ^_^
   * Gestion de l'historique des Place => soit on fait quelque chose à part, soit on l'ajoute dans "Configure". Mais à ce moment là il faudrait aussi un utilisateur et une date !
@@ -124,6 +134,8 @@ Créer un nouveau script de migration depuis 0 en Django.
   * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
   * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
   * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
+  * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
+  * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * à la migration depuis Gissmo 1.9 : sample\_rate de Channel devra devenir un paramètre du Datalogger et/ou de l'Hybrid de la chaîne d'acquisition
