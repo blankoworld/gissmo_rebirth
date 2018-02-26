@@ -98,6 +98,7 @@ Créer un nouveau script de migration depuis 0 en Django.
 
 ### À faire
 
+  * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
   * Place : rendre la date de début obligatoire ?
   * Place : ajouter une date de fin
   * sample_rate n'est PAS un paramètre, il ira dans Channel
