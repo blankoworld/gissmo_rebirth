@@ -95,13 +95,17 @@ Créer un nouveau script de migration depuis 0 en Django.
   * Equipment : n'afficher par défaut que la dernière configuration connue (dernières lignes de Configuration)
   * Equipment : à la sauvegarde, si on change purchase_date, mettre à jour les lignes de Configuration adéquates !
   * filter est aussi un champ de Channel (champ libre non obligatoire)
+  * WIZARD channel : create Datatypes for each Channel
+  * Channel : au save(), vérifier l'overlap pour éviter des problèmes de création
 
 ### À faire
 
+  * Parameter : on ne devrait pas pouvoir supprimer DIP/AZIMUTH d'un modèle de type Sensor ou Hybrid ! Sinon ça casserait les configurations et les channels (pour le calcul)
+  * Wizard channel : create links between Channels and configuration from given equipments
+  * Channel : N'afficher qu'une donnée calculée de dip/azimuth en fonction du DIP/Azimuth de l'équipement (en Config de l'équipement)
   * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
   * Place : rendre la date de début obligatoire ?
   * Place : ajouter une date de fin
-  * sample_rate n'est PAS un paramètre, il ira dans Channel
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
   * Equipment : ajouter un bouton "Move Equipment" pour déplacer l'équipement de Place. Utiliser les même étapes que le Wizard "Configure" : une date, un user, et on déplace ! SAUF si à cette date la Place a une date de fin ! À noter que la Place courante est la dernière enregistrée dans la table Location. Le champ est donc calculé, pas un champ "normal". Donc => enlever "place_id" de Equipment
   * Equipment : rendre la Place en lecture seule (sauf à la création). Pour la changer, il faudra utiliser le bouton "Move equipment"
@@ -125,7 +129,7 @@ Créer un nouveau script de migration depuis 0 en Django.
     * azimuth (sensor)
   * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul. Ajouter "filter" comme champ de saisie possible lors de la création des Channels
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
-  * Channel wizard : Demander le sample rate, le Sensor de départ, le nombre de channel (1 ou 3), le type de nommage des canaux (ZNE/Z12/Z23/Champs libre) et la date PUIS on affiche les autres équipements possibles (autres que SENSOR) PUIS on affiche un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
+  * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
   * Channel : faire disparaître le bouton "Add Channel"
   * Station : faire apparaître un bouton "Add Channel" seulement si la station des équipements
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
@@ -140,9 +144,11 @@ Créer un nouveau script de migration depuis 0 en Django.
   * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
   * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
   * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
+  * Channel change form: Permettre d'aller sur la page de chaque équipement
+  * Channel change form: Permettre d'aller sur les places du channel ?
 
-  * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
-  * à la migration depuis Gissmo 1.9 : sample\_rate de Channel devra devenir un paramètre du Datalogger et/ou de l'Hybrid de la chaîne d'acquisition
+  * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit, dip et azimuth devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
+  * migration : sample_rate n'est PAS un paramètre, il ira dans Channel
   * Network : changer les champs start/end par un span (DateTimeRangeField)
   * Adapter Station Map
 
