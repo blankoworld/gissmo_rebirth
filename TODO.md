@@ -1,33 +1,76 @@
 # TODO
 
-## State
+  * Mettre les Status en dur (liste prédéfinie). Savoir que "New" est celui par défaut. Et que Failure et Broken sont ceux qui mettent une Station en état Failure.
 
-  * initialiser les valeurs à défaut suivant l'équipement donné (avec les paramètres de l'équipement, etc.)
-  * créer un bouton "create State" depuis Equipment
-  * Lister les états sous Equipment (avec juste les dates et quelques paramètres), puis permettre d'afficher un détail en allant sur la page spécifique d'un State ?
-  * Comment enlever le menu "State" dans l'accueil de l'admin ? Idée : ne pas faire de admin.site.register(State), mais créer des URL /state/edit et /state/show pour afficher/éditer les états
-  * wizard pour créer un State : 
-    * step1: choix de l'équipement (+ bouton "new state" depuis Equipment) et la Date de début (supérieure à la purchase date)
-    * step2: affichage des paramètres en fonction du modèle de l'équipement choisi et d'une place (et un code station si la place est accolée)
-    * step3 (optionnel): choix d'un canal pour le lier avec (step2 ajouter une coche)
-  * Tester l'overlap dans le clean() du Form pour afficher un message d'erreur parlant
-  * Migrer DOC d'intervention vers State ? Si oui, que faire d'une doc d'intervention sur une station ? On la lie à quoi ?
+## Wizard Channel
+
+  * Wizard channel : create links between Channels and configuration from given equipments
+  * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
+  * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
+  * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
+  * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
 
 ## Channel
 
-  * wizard pour créer le canal : 
-    * step1: d'abord choisir la station et la date (range), le channel code, le location code et le code Station (à la soumission vérifier que code station existe, et de manière unique)
-    * step2: choisir les équipements (afficher 3 (voire plus ?) champs pour choisir un équipement dont le state a un jour été sur une place de cette station en fonction de la date)
-    * step3: afficher les states possibles pour ces équipements (dans les dates fournies et qui n'ont pas déjà un lien avec un Channel) => problème car on a 3 channels sur un même équipement. Donc pas possible de bloquer en fonction de ça… (sinon il faudrait 3 State par équipement…)
   * ajouter created\_at, updated\_at + mise à jour de updated\_at en pre\_save chaque fois
+  * Channel : faire disparaître le bouton "Add Channel"
+  * faire une alerte à la création d'un Channel si les équipements choisis ne disposent pas des paramètres obligatoires habituels (dip et azimuth pour Sensor, clock_drift/unit et storage\_format pour Datalogger, etc.) => sûrement dans le Wizard entre deux étapes
+  * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
+  * Channel change form: Permettre d'aller sur la page de chaque équipement
+  * Channel change form: Permettre d'aller sur les places du channel ?
 
 ## Notebook
 
   * ajouter l'utilisateur et l'organisme présent à ce moment là (ça peut être que EDF par exemple, ou qu'une personne de l'EOST)
 
+## Station
+
+  * Station : faire apparaître un bouton "Add Channel" seulement si la station des équipements
+  * Adapter Station Map
+
+## Place
+
+  * Place : rendre la date de début obligatoire ?
+  * Place : ajouter une date de fin
+  * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique des lat/long/elev. puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit. Et qu'une Place ne devrait pas se déplacer de toute manière. Même si c'est le cas, on crée une nouvelle Place ^_^
+  * Gestion de l'historique des Place => soit on fait quelque chose à part, soit on l'ajoute dans "Configure". Mais à ce moment là il faudrait aussi un utilisateur et une date !
+
+## Equipment
+
+  * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
+  * Equipment : ajouter un bouton "Move Equipment" pour déplacer l'équipement de Place. Utiliser les même étapes que le Wizard "Configure" : une date, un user, et on déplace ! SAUF si à cette date la Place a une date de fin ! À noter que la Place courante est la dernière enregistrée dans la table Location. Le champ est donc calculé, pas un champ "normal". Donc => enlever "place_id" de Equipment
+  * Equipment : rendre la Place en lecture seule (sauf à la création). Pour la changer, il faudra utiliser le bouton "Move equipment"
+  * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
+  * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
+  * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
+  * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
+  * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
+  * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
+
+## Parameter
+
+  * Parameter : on ne devrait pas pouvoir supprimer DIP/AZIMUTH d'un modèle de type Sensor ou Hybrid ! Sinon ça casserait les configurations et les channels (pour le calcul)
+  * Parameter : à la création d'un Parameter => l'ajouter avec sa valeur par défaut à tous les équipements depuis le début
+  * Parameter : à la suppression d'un Parameter => l'enlever de tous les équipements => demander s'il faut réellement l'enlever ? Même pour historique on ne garde plus la valeur ?
+  * Parameter : une valeur par défaut EST obligatoire ! Faire du Javascript ou trouver un stratagème pour qu'on ait toujours une et une seule valeur par défaut !
+  * Parameter : ne pas permettre de prendre DEUX valeurs par défaut. Toujours une. Obligatoire
+  * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
+    * FAIT | créer un champ calculé have\_default\_value
+    * utiliser ce champ calculé pour l'affichage du Warning
+  * À l'enregistrement du Parameter, signaler à l'utilisateur s'il a plusieurs valeurs par défaut (encart WARNING)
+  * Création automatique de certains paramètres pour un modèle d'équipement défini (suivant la liste d'après)
+  * Faire une liste des paramètres qui iront sur les paramètres des équipements désormais : 
+    * storage_format (datalogger)
+    * clock_drift (datalogger)
+    * clock\_drift\_unit (datalogger)
+    * status
+    * dip (sensor)
+    * azimuth (sensor)
+  * Vérifier, que ce soit à la création du modèle ou de l'équipement, que pour un Sensor on ait certains paramètres d'existant, pour un Datalogger d'autres paramètres (storage format par exemple).
+
 ## Intervention
 
-  * Mélange de Notebook et State (il se passe quelque chose au début d'un State, et à la fin) et Channel (comme State)
+  * Mélange de Notebook et Configuration (il se passe quelque chose au début d'une Configuration) et Channel
 
 ## Migration
 
@@ -39,6 +82,10 @@ Créer un nouveau script de migration depuis 0 en Django.
   4. Adapter les principales fonctions de transitions en Django (celles pour les types d'équipement, les modèles, les stations, les places, les builts, etc.)
   5. Quand on migre les channels, demander à Maxime quelles sont les règles ZNE pour récupérer soit le dip, soit l'azimuth, etc.
 
+Divers : 
+
+  * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit, dip et azimuth devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
+  * migration : sample_rate n'est PAS un paramètre, il ira dans Channel
 
 ## Solution 4 : Timeline
 
@@ -95,62 +142,11 @@ Créer un nouveau script de migration depuis 0 en Django.
   * Equipment : n'afficher par défaut que la dernière configuration connue (dernières lignes de Configuration)
   * Equipment : à la sauvegarde, si on change purchase_date, mettre à jour les lignes de Configuration adéquates !
   * filter est aussi un champ de Channel (champ libre non obligatoire)
+  * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul. Ajouter "filter" comme champ de saisie possible lors de la création des Channels
   * WIZARD channel : create Datatypes for each Channel
   * Channel : au save(), vérifier l'overlap pour éviter des problèmes de création
-
-### À faire
-
-  * Parameter : on ne devrait pas pouvoir supprimer DIP/AZIMUTH d'un modèle de type Sensor ou Hybrid ! Sinon ça casserait les configurations et les channels (pour le calcul)
-  * Wizard channel : create links between Channels and configuration from given equipments
   * Channel : N'afficher qu'une donnée calculée de dip/azimuth en fonction du DIP/Azimuth de l'équipement (en Config de l'équipement)
-  * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
-  * Place : rendre la date de début obligatoire ?
-  * Place : ajouter une date de fin
-  * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
-  * Equipment : ajouter un bouton "Move Equipment" pour déplacer l'équipement de Place. Utiliser les même étapes que le Wizard "Configure" : une date, un user, et on déplace ! SAUF si à cette date la Place a une date de fin ! À noter que la Place courante est la dernière enregistrée dans la table Location. Le champ est donc calculé, pas un champ "normal". Donc => enlever "place_id" de Equipment
-  * Equipment : rendre la Place en lecture seule (sauf à la création). Pour la changer, il faudra utiliser le bouton "Move equipment"
-  * Parameter : à la création d'un Parameter => l'ajouter avec sa valeur par défaut à tous les équipements depuis le début
-  * Parameter : à la suppression d'un Parameter => l'enlever de tous les équipements => demander s'il faut réellement l'enlever ? Même pour historique on ne garde plus la valeur ?
-  * Parameter : une valeur par défaut EST obligatoire ! Faire du Javascript ou trouver un stratagème pour qu'on ait toujours une et une seule valeur par défaut !
-  * Parameter : ne pas permettre de prendre DEUX valeurs par défaut. Toujours une. Obligatoire
-  * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
-    * FAIT | créer un champ calculé have\_default\_value
-    * utiliser ce champ calculé pour l'affichage du Warning
-  * À l'enregistrement du Parameter, signaler à l'utilisateur s'il a plusieurs valeurs par défaut (encart WARNING)
   * Pour la saisie des paramètres d'un équipement : si qu'une seule ligne (maximum) de Value pour un paramètre donné : le champ est libre pour l'utilisateur. Si plusieurs valeurs : menu déroulant avec les valeurs possibles pour ce paramètre.
-  * Mettre les Status en dur (liste prédéfinie). Savoir que "New" est celui par défaut. Et que Failure et Broken sont ceux qui mettent une Station en état Failure.
-  * Création automatique de certains paramètres pour un modèle d'équipement défini (suivant la liste d'après)
-  * Faire une liste des paramètres qui iront sur les paramètres des équipements désormais : 
-    * storage_format (datalogger)
-    * clock_drift (datalogger)
-    * clock\_drift\_unit (datalogger)
-    * status
-    * dip (sensor)
-    * azimuth (sensor)
-  * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul. Ajouter "filter" comme champ de saisie possible lors de la création des Channels
-  * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
-  * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
-  * Channel : faire disparaître le bouton "Add Channel"
-  * Station : faire apparaître un bouton "Add Channel" seulement si la station des équipements
-  * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
-  * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique des lat/long/elev. puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit. Et qu'une Place ne devrait pas se déplacer de toute manière. Même si c'est le cas, on crée une nouvelle Place ^_^
-  * Gestion de l'historique des Place => soit on fait quelque chose à part, soit on l'ajoute dans "Configure". Mais à ce moment là il faudrait aussi un utilisateur et une date !
-  * faire une alerte à la création d'un Channel si les équipements choisis ne disposent pas des paramètres obligatoires habituels (dip et azimuth pour Sensor, clock_drift/unit et storage\_format pour Datalogger, etc.) => sûrement dans le Wizard entre deux étapes
-  * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
-  * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
-  * Vérifier, que ce soit à la création du modèle ou de l'équipement, que pour un Sensor on ait certains paramètres d'existant, pour un Datalogger d'autres paramètres (storage format par exemple).
-  * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
-  * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
-  * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
-  * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
-  * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
-  * Channel change form: Permettre d'aller sur la page de chaque équipement
-  * Channel change form: Permettre d'aller sur les places du channel ?
-
-  * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit, dip et azimuth devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
-  * migration : sample_rate n'est PAS un paramètre, il ira dans Channel
-  * Network : changer les champs start/end par un span (DateTimeRangeField)
-  * Adapter Station Map
 
 ## API
 
