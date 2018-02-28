@@ -1,6 +1,16 @@
 # TODO
 
+## Status
+
   * Mettre les Status en dur (liste prédéfinie). Savoir que "New" est celui par défaut. Et que Failure et Broken sont ceux qui mettent une Station en état Failure.
+
+## Wizard CLOSE Channels
+
+  * adapter le wizard de fermeture de channels
+
+## StationXML
+
+  * adapter StationXML pour fonctionner (\_get\_obspy\_equipment par exemple)
 
 ## Wizard Channel
 
@@ -18,6 +28,7 @@
   * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
   * Channel change form: Permettre d'aller sur la page de chaque équipement
   * Channel change form: Permettre d'aller sur les places du channel ?
+  * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
 
 ## Notebook
 
@@ -27,6 +38,11 @@
 
   * Station : faire apparaître un bouton "Add Channel" seulement si la station des équipements
   * Adapter Station Map
+  * faire l'affichage d'une station pour avoir :
+    * la liste des équipements en cours
+    * la liste des équipements passés sur cette Station
+    * l'historique des modifications (sorte de mélange entre Notebooks Station, Timeline Equipment et Channel)
+  * adapter la fonction d'état "state" (ou status ?) d'une Station
 
 ## Place
 
@@ -46,6 +62,7 @@
   * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
   * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
   * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
+  * vérifier qu'au changement de Place d'un Équipement il n'y ait pas de Channel ouvert. Cas échéant : demander à l'utilisateur de fermer le canal. Ce qui devrait mettre une date de fin au State et au canal et créer un nouveau State. Si changement de Place de l'équipement (quand aucun canal ouvert dessus), alors on adapte le State en conséquence (le dernier State, trié par date).
 
 ## Parameter
 
@@ -86,67 +103,6 @@ Divers :
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit, dip et azimuth devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * migration : sample_rate n'est PAS un paramètre, il ira dans Channel
-
-## Solution 4 : Timeline
-
-  * faire nettoyage comme prévu : supprimer les triggers, supprimer les historiques, supprimer les interventions, mettre à jour l'interface pour qu'elle fonctionne sans cela.
-  * ajouter un champ 'influe sur la réponse instrumentale' coché par défaut sur tous les paramètres des modèles
-  * ajouter organisme à Notebook (Station)
-  * créer un objet Timeline, avec lien obligatoire vers Equipment. Champs : date, user, equipment_id, paramètre, valeur, note (optionnel)
-  * supprimer le champ "parent" sur l'équipement
-  * champs sur Équipement : status, storage\_format, clock\_drift, clock\_drift\_unit, adresses IP et Service sont en lecture seule
-  * ajouter le champ 'status' pour l'Équipement et laisser l'autre nommé "State". Adapter le formulaire et chercher les répercutions sur le code existant (avec le mot clé State)
-  * wizard de modification des paramètres de l'équipement avec toujours date + user. 1/ garder sur l'équipement les dernières valeurs modifiées 2/ enregistrer autant de lignes de Timeline que de paramètres modifiés. IDÉE : inclure ce "wizard" sur Equipement lui-même ? Avec les bons boutons/champs supplémentaires pour valider le formulaire de changement
-  * Scinder le wizard "Change equipment parameter" en 2 : d'abord l'utilisateur et la date, puis les paramètres (en prenant les derniers paramètres connus):
-    * à l'affichage initial, on doit présenter les dernières valeurs connues
-    * si pas de paramètres (dans Timeline), il faudra créer une ligne de Timeline de base, puis la nouvelle valeur
-  * Au save d'un Equipment: vérifier si purchase_date a changé. Si oui, changer toutes les lignes de Timeline qui ont cette date avec la nouvelle date.
-  * À la création de l'équipement, créer des lignes de Timeline sur les champs spécifiques (avec l'utilisateur courant et la purchase_date comme date)
-  * ajouter l'élément State avec les champs place, station_code, dip, azimuth, latitude, longitude, elevation et un champ data contenant "depth" (si Sensor/Hybrid) et les paramètres du modèle à aujourd'hui
-
-  * Channel : 1/ supprimer les champs dip, azimuth, latitude, longitude, elevation, depth, etc. Tout est sur State désormais. 2/ adapter get\_current\_position pour prendre celle du State de type Sensor. 3/ changer start/end en span (pour la plage de dates)
-
-  * créer un wizard de création du State ? (bouton "New State" sur Équipement ?)
-  * créer le wizard de création de channels => faut-il propose de choisir simplement les équipements dans la première étape (5 équipements maxi en fonction des dates) et s'occuper automatiquement de prendre les States correspondants et dans l'étape 2 d'afficher les paramètres de ces équipements ?
-  * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
-  * adapter le wizard 3 channels pour générer les States si besoin, ou encore vérifier si les States existe => à réfléchir
-  * adapter le wizard de fermeture de channels
-  * créer le Wizard de changement d'un State pour un Channel ? (peut-être juste avoir un bouton "corriger" à côté de chaque équipement)
-  * adapter StationXML pour fonctionner (\_get\_obspy\_equipment par exemple)
-  * faire l'affichage d'une station pour avoir :
-    * la liste des équipements en cours
-    * la liste des équipements passés sur cette Station
-    * l'historique des modifications (sorte de mélange entre Notebooks Station, Timeline Equipment et Channel)
-  * adapter la fonction d'état "state" (ou status ?) d'une Station
-  * vérifier qu'au changement de Place d'un Équipement il n'y ait pas de Channel ouvert. Cas échéant : demander à l'utilisateur de fermer le canal. Ce qui devrait mettre une date de fin au State et au canal et créer un nouveau State. Si changement de Place de l'équipement (quand aucun canal ouvert dessus), alors on adapte le State en conséquence (le dernier State, trié par date).
-  * Équipement : supprimer la table configuration ? Si oui, le post\_save aussi (add\_configuration) 2/ Si on supprime pas, il faut mettre à jour la Configuration à chaque MàJ du Timeline SI c'est la dernière Timeline…
-  * vérifier que Station Map fonctionne encore
-  * API : vérifier le paragraphe suivant pour toutes les modifications nécessaires
-
-## Solution 5 : Ajout des paramètres à liste non finie dans les paramètres de l'équipement et Configuration
-
-### Fini
-
-  * Adapter la table Value pour avoir un champ "default" (booléen). Le booléen est par défaut à False.
-  * Contrainte sur parameter_id, value dans Value (pour pas avoir 2 fois la même valeur)
-  * Vérifier qu'à la création d'un équipement on crée chaque ligne de Configuration avec les paramètres par défaut (add_configuration sûrement)
-  * Sur Parameter afficher la liste des Value en Inline, avec le champ "default" pour chaque valeur (pour choisir lequel est par défaut
-  * supprimer storage\_format, clock\_drift et clock\_drift\_unit des équipements (ça deviendra des paramètres d'un équipement)
-  * Ajouter le champ "start" sur Configuration (dans module Equipment). Aussi une note comme sur Timeline ?
-  * vérifier contrainte unique sur Station code (unique=True sur code/name)
-  * créer une table de relation entre Channel et Configuration (manytomany sur channel vers Configuration)
-  * sur Equipment garder l'historique des Place avec quelque chose de similaire à Timeline (table entre Equipment et Place avec un start)
-  * supprimer l'objet Timeline
-  * WIZARD Equipment : Adapter le "Change timeline" de l'équipement pour les paramètres d'un équipement et ses valeurs (toujours avec une date de début et un utilisateur qui a fait la modification)
-  * WIZARD Equipment : vérifier les champs dits "libres"
-  * Equipment : n'afficher par défaut que la dernière configuration connue (dernières lignes de Configuration)
-  * Equipment : à la sauvegarde, si on change purchase_date, mettre à jour les lignes de Configuration adéquates !
-  * filter est aussi un champ de Channel (champ libre non obligatoire)
-  * WIZARD de création de Channel fait plutôt référence à la création d'un "Stream" impliquant des équipements, un sample rate (qui définit la première lettre H, L, etc.), un groupement de code (ZNE, ou Z12 ou Z23) et un algorithme particulier pour générer les Channels => demander à Jérôme l'algo pour ce calcul. Ajouter "filter" comme champ de saisie possible lors de la création des Channels
-  * WIZARD channel : create Datatypes for each Channel
-  * Channel : au save(), vérifier l'overlap pour éviter des problèmes de création
-  * Channel : N'afficher qu'une donnée calculée de dip/azimuth en fonction du DIP/Azimuth de l'équipement (en Config de l'équipement)
-  * Pour la saisie des paramètres d'un équipement : si qu'une seule ligne (maximum) de Value pour un paramètre donné : le champ est libre pour l'utilisateur. Si plusieurs valeurs : menu déroulant avec les valeurs possibles pour ce paramètre.
 
 ## API
 
