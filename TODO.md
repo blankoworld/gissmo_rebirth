@@ -14,11 +14,17 @@
 
 ## Wizard Channel
 
+  * Ajouter le user comme paramètre du Wizard Channel pour garder QUI a crée le Channel (et qui a choisi les paramètres)
+  * Changer le nom du champ "Code format" en "orientation format"
+  * Le "location code" n'est pas modifiable sur les 3 channels
+  * Filter n'est plus utile
+  * À la place de Filter, pour chaque channel il faut pouvoir modifier des paramètres qui sont marqués spécialement (un booléen à False par défaut sur le Paramètre)
   * Wizard channel : create links between Channels and configuration from given equipments
   * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
   * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
   * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
+  * Changer les noms de Calibration unit en m/s², etc.
 
 ## Channel
 
@@ -46,6 +52,8 @@
 
 ## Place
 
+  * Hériter de lat/long/elevation de la station quand on crée la Place ? (si une station est donnée)
+  * EquipmentInline doit être en Readonly (et ne laisser que le bouton EDIT)
   * Place : rendre la date de début obligatoire ?
   * Place : ajouter une date de fin
   * on garde lat/long/elevation/depth sur une Place ! Plus besoin sur Channel (on le lit sur la place) ni sur l'équipement ! Et pas besoin d'historique des lat/long/elev. puisqu'on crée une nouvelle Place au besoin. Exemple: une Place en haut du puit, et une place pour le fond du puit. Et qu'une Place ne devrait pas se déplacer de toute manière. Même si c'est le cas, on crée une nouvelle Place ^_^
@@ -63,6 +71,8 @@
   * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
   * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
   * vérifier qu'au changement de Place d'un Équipement il n'y ait pas de Channel ouvert. Cas échéant : demander à l'utilisateur de fermer le canal. Ce qui devrait mettre une date de fin au State et au canal et créer un nouveau State. Si changement de Place de l'équipement (quand aucun canal ouvert dessus), alors on adapte le State en conséquence (le dernier State, trié par date).
+  * Changer le nom du bouton "Station" en "Go to Station" ou similaire (trouver un nom)
+  * Wizard Configure : pour les paramètres dip/azimuth, ajouter un help_text qui définit que c'est par rapport au NORD qu'on les définit
 
 ## Parameter
 
@@ -84,6 +94,7 @@
     * dip (sensor)
     * azimuth (sensor)
   * Vérifier, que ce soit à la création du modèle ou de l'équipement, que pour un Sensor on ait certains paramètres d'existant, pour un Datalogger d'autres paramètres (storage format par exemple).
+  * Récupérer dans l'URL (par request) le model_id__exact=2 pour que lorsqu'on arrive dans Add Parameter on utilise cet ID comme valeur par défaut (dans le \_\_init\_\_) pour le champ "Model". En somme on veut préremplir le champ
 
 ## Intervention
 
@@ -106,9 +117,5 @@ Divers :
 
 ## API
 
-  * ajouter le champ change_response de Parameter
   * ajouter l'objet "Notebook" de Station (sous le nom station_notebooks ?)
-  * créer une API pour Channel qui mette à disposition les bonnes informations : 
-    * supprimer channel_config sûrement
-    * trouver comment rendre tous les paramètres du canal dans Channel
-  * ajouter l'historique des Place pour un Équipement donné
+  * faire des nested dans l'API
