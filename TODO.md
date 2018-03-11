@@ -17,14 +17,13 @@
   * Ajouter le user comme paramètre du Wizard Channel pour garder QUI a crée le Channel (et qui a choisi les paramètres)
   * Changer le nom du champ "Code format" en "orientation format"
   * Le "location code" n'est pas modifiable sur les 3 channels
-  * Filter n'est plus utile
   * À la place de Filter, pour chaque channel il faut pouvoir modifier des paramètres qui sont marqués spécialement (un booléen à False par défaut sur le Paramètre)
   * Wizard channel : create links between Channels and configuration from given equipments
   * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
   * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
   * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
-  * Changer les noms de Calibration unit en m/s², etc.
+  * Le dip est entre -90 et 90 => adapter le code qui donne le triplet
 
 ## Channel
 
@@ -117,5 +116,4 @@ Divers :
 
 ## API
 
-  * ajouter l'objet "Notebook" de Station (sous le nom station_notebooks ?)
   * faire des nested dans l'API
