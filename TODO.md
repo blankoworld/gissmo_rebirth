@@ -34,6 +34,7 @@
   * Channel change form: Permettre d'aller sur la page de chaque équipement
   * Channel change form: Permettre d'aller sur les places du channel ?
   * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
+  * dans Channel Configuration, il faudrait faire un pre-save pour REFUSER les paramètres qui sont différent d'un impact = 2 !!!
 
 ## Notebook
 
@@ -113,7 +114,3 @@ Divers :
 
   * à la migration depuis Gissmo 1.9 : storage\_format, clock\_drift, clock\_drift\_unit, dip et azimuth devront être crées comme paramètre des équipements qui ont une valeur pour ce champ
   * migration : sample_rate n'est PAS un paramètre, il ira dans Channel
-
-## API
-
-  * faire des nested dans l'API
