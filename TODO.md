@@ -61,9 +61,9 @@
 
 ## Equipment
 
+  * Move equipment : ne pas autoriser de date supérieure à aujourd'hui!
+  * Equipment : au changement du purchase_date, si une valeur de Location existe pour l'ancienne purchase_date => la mettre à jour
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
-  * Equipment : ajouter un bouton "Move Equipment" pour déplacer l'équipement de Place. Utiliser les même étapes que le Wizard "Configure" : une date, un user, et on déplace ! SAUF si à cette date la Place a une date de fin ! À noter que la Place courante est la dernière enregistrée dans la table Location. Le champ est donc calculé, pas un champ "normal". Donc => enlever "place_id" de Equipment
-  * Equipment : rendre la Place en lecture seule (sauf à la création). Pour la changer, il faudra utiliser le bouton "Move equipment"
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
   * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
   * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
