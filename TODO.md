@@ -4,10 +4,6 @@
 
   * Mettre les Status en dur (liste prédéfinie). Savoir que "New" est celui par défaut. Et que Failure et Broken sont ceux qui mettent une Station en état Failure.
 
-## Wizard CLOSE Channels
-
-  * adapter le wizard de fermeture de channels
-
 ## StationXML
 
   * adapter StationXML pour fonctionner (\_get\_obspy\_equipment par exemple)
@@ -77,8 +73,6 @@
 ## Parameter
 
   * Parameter : on ne devrait pas pouvoir supprimer DIP/AZIMUTH d'un modèle de type Sensor ou Hybrid ! Sinon ça casserait les configurations et les channels (pour le calcul)
-  * Parameter : à la création d'un Parameter => l'ajouter avec sa valeur par défaut à tous les équipements depuis le début
-  * Parameter : à la suppression d'un Parameter => l'enlever de tous les équipements => demander s'il faut réellement l'enlever ? Même pour historique on ne garde plus la valeur ?
   * Parameter : une valeur par défaut EST obligatoire ! Faire du Javascript ou trouver un stratagème pour qu'on ait toujours une et une seule valeur par défaut !
   * Parameter : ne pas permettre de prendre DEUX valeurs par défaut. Toujours une. Obligatoire
   * Sur Parameter afficher un encart WARNING (comme à l'époque pour les interventions) pour signaler qu'il n'a pas de valeur par défaut et qu'il serait sage d'en ajouter une ?
