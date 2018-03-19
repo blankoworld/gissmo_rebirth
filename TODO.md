@@ -19,7 +19,6 @@
   * Le "location code" n'est pas modifiable sur les 3 channels
   * À la place de Filter, pour chaque channel il faut pouvoir modifier des paramètres qui sont marqués spécialement (un booléen à False par défaut sur le Paramètre)
   * Wizard channel : create links between Channels and configuration from given equipments
-  * WIZARD Channel : après l'étape 1 (date), si la station n'a pas d'équipement de type SENSOR OU HYBRID (regarder dans Location les places associées) dans la période donnée => faire un message d'erreur expliquant qu'il est impossible de créer un channel là dessus car aucun équipement ne correspond.
   * le lien Channel et Paramètre ne se fait QUE sur les paramètres "change\_response" = True
   * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
   * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
@@ -29,12 +28,12 @@
 
   * ajouter created\_at, updated\_at + mise à jour de updated\_at en pre\_save chaque fois
   * Channel : faire disparaître le bouton "Add Channel"
-  * faire une alerte à la création d'un Channel si les équipements choisis ne disposent pas des paramètres obligatoires habituels (dip et azimuth pour Sensor, clock_drift/unit et storage\_format pour Datalogger, etc.) => sûrement dans le Wizard entre deux étapes
   * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
   * Channel change form: Permettre d'aller sur la page de chaque équipement
   * Channel change form: Permettre d'aller sur les places du channel ?
   * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
   * dans Channel Configuration, il faudrait faire un pre-save pour REFUSER les paramètres qui sont différent d'un impact = 2 !!!
+  * Afficher correctement la date (span) dans l'admin
 
 ## Notebook
 
@@ -42,7 +41,7 @@
 
 ## Station
 
-  * Station : faire apparaître un bouton "Add Channel" seulement si la station des équipements
+  * Station : faire apparaître un bouton "Add Channel" seulement si la station a des équipements
   * Adapter Station Map
   * faire l'affichage d'une station pour avoir :
     * la liste des équipements en cours
@@ -62,8 +61,8 @@
 ## Equipment
 
   * Move equipment : ne pas autoriser de date supérieure à aujourd'hui!
-  * Equipment : au changement du purchase_date, si une valeur de Location existe pour l'ancienne purchase_date => la mettre à jour
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
+  * WIZARD Equipment : ne PAS afficher les paramètres qui ont un impact de type CHANNEL !
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
   * ajouter un paramètre à l'URL d'équipement pour voyager dans le temps et avoir les infos de cet Équipement à une date donnée
   * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
