@@ -23,13 +23,14 @@
 ## Channel
 
   * ajouter created\_at, updated\_at + mise à jour de updated\_at en pre\_save chaque fois
-  * Channel : faire disparaître le bouton "Add Channel"
   * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
   * Channel change form: Permettre d'aller sur la page de chaque équipement
   * Channel change form: Permettre d'aller sur les places du channel ?
   * faire l'affichage de Channel avec tous les paramètres confondus (en lecture seule)
   * dans Channel Configuration, il faudrait faire un pre-save pour REFUSER les paramètres qui sont différent d'un impact = 2 !!!
   * Afficher correctement la date (span) dans l'admin
+  * Afficher lati/long/elevation de la place du Sensor (ou de l'hybrid)
+  * Afficher les paramètres de configuration du canal…
 
 ## Notebook
 
@@ -37,13 +38,14 @@
 
 ## Station
 
-  * Station : faire apparaître un bouton "Add Channel" seulement si la station a des équipements
+  * Station : faire apparaître un bouton "Add Channel" seulement si la station a des équipements. Et si elle n'a pas de date de fin !
   * Adapter Station Map
   * faire l'affichage d'une station pour avoir :
     * la liste des équipements en cours
     * la liste des équipements passés sur cette Station
     * l'historique des modifications (sorte de mélange entre Notebooks Station, Timeline Equipment et Channel)
   * adapter la fonction d'état "state" (ou status ?) d'une Station
+  * Ne PAS permettre la modification des places de la station : LECTURE SEULE
 
 ## Place
 
@@ -56,6 +58,7 @@
 
 ## Equipment
 
+  * Move equipment : ne PAS proposer les paramètres d'Impact = 2 dans la liste !
   * Move equipment : ne pas autoriser de date supérieure à aujourd'hui!
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
   * WIZARD Equipment : ne PAS afficher les paramètres qui ont un impact de type CHANNEL !
