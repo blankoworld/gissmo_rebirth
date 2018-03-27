@@ -19,9 +19,11 @@
   * Channel wizard : afficher un récapitulatif avec les paramètres de chaque équipement et finalement on valide tout ça.
   * Dans wizard Channel : ne pas permettre d'ajouter des Channels à une date où les équipements sont sur une Place qui a une date de fin qui ne correspond pas !
   * Le dip est entre -90 et 90 => adapter le code qui donne le triplet
+  * Insérer dans une table channel_material la liste des equipments du Canal
 
 ## Channel
 
+  * Créer une table Material qui constitue les équipements d'un canal. Essayer de limiter ce nombre à 5 (contrainte?), un de chaque chain_type
   * ajouter created\_at, updated\_at + mise à jour de updated\_at en pre\_save chaque fois
   * Tester l'overlap entre 2 canaux à la création (span\_\_overlap avec un filtrage sur d'autres champs comme network, location code, station, code) dans un pre\_save probablement (Cf. le check\_overlap() de Timeline)
   * Channel change form: Permettre d'aller sur la page de chaque équipement
@@ -67,7 +69,6 @@
   * rajouter un système pour voyager dans le temps sur l'équipement (une ligne de temps avec les différentes dates et un curseur par exemple)
   * Sur equipment adapter le bouton "Station" pour qu'il renvoie vers la BONNE station de l'équipement (suivant l'URL et la date saisie dans l'URL)
   * Equipment : Faire un message d'erreur pour le changement d'une place SI une channel est acollée pour cette date donnée
-  * Equipment : faire un bouton History pour voir la liste des modifications. On donne un champ "début" (obligatoire), un champ "fin" (non obligatoire), on valide : ça donne l'historique entre ces dates ou bien depuis la première date à aujourd'hui
   * vérifier qu'au changement de Place d'un Équipement il n'y ait pas de Channel ouvert. Cas échéant : demander à l'utilisateur de fermer le canal. Ce qui devrait mettre une date de fin au State et au canal et créer un nouveau State. Si changement de Place de l'équipement (quand aucun canal ouvert dessus), alors on adapte le State en conséquence (le dernier State, trié par date).
   * Changer le nom du bouton "Station" en "Go to Station" ou similaire (trouver un nom)
   * Wizard Configure : pour les paramètres dip/azimuth, ajouter un help_text qui définit que c'est par rapport au NORD qu'on les définit
