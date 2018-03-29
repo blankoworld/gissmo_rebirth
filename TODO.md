@@ -60,8 +60,7 @@
 
 ## Equipment
 
-  * Move equipment : ne PAS proposer les paramètres d'Impact = 2 dans la liste !
-  * Move equipment : ne pas autoriser de date supérieure à aujourd'hui!
+  * Move equipment ET HISTORY : ne pas autoriser de date supérieure à aujourd'hui!
   * Equipment : comment modifier des valeurs a posteriori? Genre les valeurs de la date initiale, etc. ? => toujours afficher les valeurs de la date de l'URL (sinon les dernières). QUESTION : Rendre ces valeurs modifiables uniquement dans l'équipement ou bien dans un objet Configuration ? (plus facile dans un objet Configuration puisqu'il permet de faire des champs adaptés pour chaque paramètre). On peut potentiellement faire les 2 : 1/ on part sur un équipement qui a une configuration et où on peut naviguer entre les dates, on choisit notre équipement, puis 2/ on clique sur un bouton "Edit configuration" pour modifier la configuration
   * WIZARD Equipment : ne PAS afficher les paramètres qui ont un impact de type CHANNEL !
   * WIZARD Equipment : ne PAS permettre la modification des paramètres qui ont une influence sur la réponse instrumentale SI un channel est lié (vérifier en fonction de la date donnée aussi)
